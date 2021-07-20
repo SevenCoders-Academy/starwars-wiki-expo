@@ -1,24 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet,View } from 'react-native';
-import { Text, Logo } from '../../components'
+import React, { useEffect } from 'react'
+import { Text, Logo, Container } from '../../components'
 
+export const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    setTimeout(() => {
+      navigation.navigate('Home')
+    }, 1000)
+  }, [navigation])
 
-export const SplashScreen = () => {
   return (
-    <View style={styles.container}>
+    <Container align="center" justify="center">
       <Logo />
       <Text>StarWars - Wiki</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+    </Container>
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#161616',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
