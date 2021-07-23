@@ -9,4 +9,5 @@ export const CustomText = styled.Text`
   margin-right: ${({ theme, mr }) => theme.metrics.px(mr || 0)}px;
   font-family: ${({ theme, fontFamily }) =>
     theme.fonts[fontFamily || 'regular']};
+  line-height: ${({ lh, size, theme }) => theme.metrics.px(lh || size || 24)}px;
 `
