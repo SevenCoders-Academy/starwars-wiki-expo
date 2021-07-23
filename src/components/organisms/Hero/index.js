@@ -1,16 +1,21 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigation } from '@react-navigation/native'
 import {
   HeroContainer,
   HeroImageBackground,
   HeroGradient,
   ButtonsView,
+  ButtomItemView,
 } from './styles'
 import { Text, Logo } from '~/components/atoms'
-import { Tag, IconButton, PlayButton } from '~/components/molecules'
+import { Tag, IconButton, WatchButton } from '~/components/molecules'
 import { colors } from '~/styles/colors'
 import { useFavorites } from '~/services/hooks'
+import { useDataStore } from '~/services/stores'
 
 export const Hero = ({ item, onDetail }) => {
+  const navigation = useNavigation()
+  const { setSelectedData } = useDataStore()
   const [loading, setLoading] = useState(true)
   const [isFavorite, setIsFavorite] = useState(false)
   const { addFavorite, getFavorites, removeFavorite } = useFavorites()
@@ -42,6 +47,11 @@ export const Hero = ({ item, onDetail }) => {
     checkIsFavorite()
   }
 
+  const onPressWatch = () => {
+    setSelectedData(item)
+    navigation.navigate('Watch')
+  }
+
   return (
     <HeroContainer>
       <HeroImageBackground
@@ -57,22 +67,30 @@ export const Hero = ({ item, onDetail }) => {
           </Text>
           <Text size={18}>{subtitle}</Text>
           <ButtonsView>
-            <IconButton
-              onPress={() =>
-                isFavorite ? removeDataFromFavorite() : addDataToFavorite()
-              }
-              label={isFavorite ? 'Rem. Favoritos' : 'Add Favoritos'}
-              iconName={
-                isFavorite ? 'remove-circle-outline' : 'add-circle-outline'
-              }
-            />
-            <PlayButton />
-            {!onDetail && (
+            <ButtomItemView align="flex-start">
               <IconButton
-                label="Saiba mais"
-                iconName="information-circle-outline"
+                onPress={() =>
+                  isFavorite ? removeDataFromFavorite() : addDataToFavorite()
+                }
+                label={isFavorite ? 'Rem. Favoritos' : 'Add Favoritos'}
+                iconName={
+                  isFavorite ? 'remove-circle-outline' : 'add-circle-outline'
+                }
               />
-            )}
+            </ButtomItemView>
+
+            <ButtomItemView>
+              <WatchButton onPress={onPressWatch} />
+            </ButtomItemView>
+
+            <ButtomItemView align="flex-end">
+              {!onDetail && (
+                <IconButton
+                  label="Saiba mais"
+                  iconName="information-circle-outline"
+                />
+              )}
+            </ButtomItemView>
           </ButtonsView>
         </HeroGradient>
       </HeroImageBackground>
