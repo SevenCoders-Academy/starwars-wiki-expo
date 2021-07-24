@@ -8,7 +8,12 @@ import {
   ButtomItemView,
 } from './styles'
 import { Text, Logo } from '~/components/atoms'
-import { Tag, IconButton, WatchButton } from '~/components/molecules'
+import {
+  Tag,
+  IconButton,
+  WatchButton,
+  FavoriteStateModal,
+} from '~/components/molecules'
 import { colors } from '~/styles/colors'
 import { useFavorites } from '~/services/hooks'
 import { useDataStore } from '~/services/stores'
@@ -17,6 +22,7 @@ export const Hero = ({ item, onDetail }) => {
   const navigation = useNavigation()
   const { setSelectedData } = useDataStore()
   const [loading, setLoading] = useState(true)
+  const [showFavoriteModal, setShowFavoriteModal] = useState(null)
   const [isFavorite, setIsFavorite] = useState(false)
   const { addFavorite, getFavorites, removeFavorite } = useFavorites()
   const { image_url, title, subtitle, type } = item
@@ -37,19 +43,34 @@ export const Hero = ({ item, onDetail }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const closeFavoriteModal = () => {
+    setTimeout(() => {
+      setShowFavoriteModal(null)
+    }, 1000)
+  }
+
   const addDataToFavorite = async () => {
     await addFavorite(item)
+    setShowFavoriteModal('added')
     checkIsFavorite()
+    closeFavoriteModal()
   }
 
   const removeDataFromFavorite = async () => {
     await removeFavorite(item)
+    setShowFavoriteModal('removed')
     checkIsFavorite()
+    closeFavoriteModal()
   }
 
   const onPressWatch = () => {
     setSelectedData(item)
     navigation.navigate('Watch')
+  }
+
+  const onPressDetail = () => {
+    setSelectedData(item)
+    navigation.navigate('Detail')
   }
 
   return (
@@ -86,6 +107,7 @@ export const Hero = ({ item, onDetail }) => {
             <ButtomItemView align="flex-end">
               {!onDetail && (
                 <IconButton
+                  onPress={onPressDetail}
                   label="Saiba mais"
                   iconName="information-circle-outline"
                 />
@@ -94,6 +116,13 @@ export const Hero = ({ item, onDetail }) => {
           </ButtonsView>
         </HeroGradient>
       </HeroImageBackground>
+      {!!showFavoriteModal && (
+        <FavoriteStateModal
+          type={showFavoriteModal}
+          visible={!!showFavoriteModal}
+          onClose={() => setShowFavoriteModal(null)}
+        />
+      )}
     </HeroContainer>
   )
 }
